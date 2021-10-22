@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import data from "../../data/Data.json";
+import SearchBar from "material-ui-search-bar";
 
 // const mycolumn = [
 //   { field: "id", headerName: "ID", width: 70 },
@@ -69,8 +70,22 @@ const Table = () => {
   ]);
 
   const [rows, setRows] = useState([]);
-
+  const [originalRows, setOriginalRows] = useState([]);
   useEffect(() => {
+    setOriginalRows(
+      data.map((row, index) => {
+        return {
+          id: row.code,
+          index: index,
+          name: row.name,
+          code: row.code,
+          availability: row.availability,
+          needingRepair: row.needing_repair,
+          durability: row.durability,
+          millis: row.mileage,
+        };
+      })
+    );
     setRows(
       data.map((row, index) => {
         return {
@@ -86,8 +101,27 @@ const Table = () => {
       })
     );
   }, []);
+
+  const [searched, setSearched] = useState("");
+  const requestSearch = (searchedVal) => {
+    const filteredRows = originalRows.filter((row) => {
+      return row.name.toLowerCase().match(searchedVal.toLowerCase());
+    });
+    setRows(filteredRows);
+  };
+
+  const cancelSearch = () => {
+    setSearched("");
+    requestSearch(searched);
+  };
+
   return (
     <div style={{ height: 400, width: "100%" }}>
+      <SearchBar
+        value={searched}
+        onChange={(searchVal) => requestSearch(searchVal)}
+        onCancelSearch={() => cancelSearch()}
+      />
       <DataGrid
         rows={rows}
         columns={columns}
