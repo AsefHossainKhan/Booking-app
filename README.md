@@ -2,6 +2,8 @@
 
 The project supports booking and returning of various products, whose information is updated on the table. The table supports sorting, and searching (based on the product names). You can run the project after cloning using yarn in the console.
 
+It is also being hosted on www.asefhossain.ga with aws linux server for viewing purposes. It will probably be taken down by the end of the month.
+
 Below are the default yarn generated README code
 
 # Getting Started with Create React App
