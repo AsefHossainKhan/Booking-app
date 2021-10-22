@@ -1,12 +1,22 @@
 import { TextField, MenuItem } from "@material-ui/core";
 import { useField, useFormikContext } from "formik";
+import { useEffect } from "react";
 
-const SelectWrapper = ({ name, options, ...otherProps }) => {
+const SelectWrapper = ({
+  name,
+  options,
+  returns,
+  setCurrentProduct,
+  ...otherProps
+}) => {
   const { setFieldValue } = useFormikContext();
   const [field, meta] = useField(name);
   const handleChange = (event) => {
     const { value } = event.target;
     setFieldValue(name, value);
+    if (setCurrentProduct) {
+      setCurrentProduct(value);
+    }
   };
   const configSelect = {
     ...field,
@@ -26,9 +36,9 @@ const SelectWrapper = ({ name, options, ...otherProps }) => {
   return (
     <TextField {...configSelect}>
       {options.map((item, pos) => {
-        return item.row.availability ? (
-          <MenuItem key={pos} value={item.row}>
-            {`${item.row.name} / ${item.row.code}`}
+        return item.availability || returns ? (
+          <MenuItem key={pos} value={item}>
+            {`${item.name} / ${item.code}`}
           </MenuItem>
         ) : null;
       })}

@@ -9,7 +9,6 @@ import { Grid, Typography } from "@material-ui/core/";
 import FormButton from "../Button";
 import DateTimePicker from "../DateTimePicker";
 import Select from "../Select";
-import data from "../../data/Data.json";
 
 const style = {
   position: "absolute",
@@ -45,7 +44,12 @@ const formValidation = Yup.object().shape({
     .when("from", (from, schema) => from && schema.min(from)),
 });
 
-export default function BasicModal({ productData, setProductData }) {
+export default function BasicModal({
+  productData,
+  setProductData,
+  bookProducts,
+  setBookProducts,
+}) {
   const [products, setProducts] = useState({});
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -60,7 +64,6 @@ export default function BasicModal({ productData, setProductData }) {
   const [price, setPrice] = useState(0);
 
   const handleSubmit = (values) => {
-    // console.log(values);
     setCurrentProduct(values.products);
     const rentPeriod = Math.floor(
       (Date.parse(values.to) - Date.parse(values.from)) / 86400000
@@ -80,18 +83,21 @@ export default function BasicModal({ productData, setProductData }) {
     handleChildClose();
     handleClose();
     const totalMileage = rentDuration * 10;
-    const durabilityDecrease =
-      rentDuration * 2 + Math.floor(rentDuration / 10) * 2;
+    let durabilityDecrease = 0;
 
     const index = productData.findIndex(
       (product) => product.code === currentProduct.code
     );
     let changingProduct = productData;
+    if (changingProduct[index].type === "meter") {
+      durabilityDecrease = rentDuration * 2 + Math.floor(rentDuration / 10) * 2;
+    } else if (changingProduct[index].type === "pain") {
+      durabilityDecrease = rentDuration;
+    }
     changingProduct[index].availability = false;
     if (changingProduct[index].mileage !== "N/A") {
       changingProduct[index].mileage += totalMileage;
     }
-    console.log(changingProduct[index].durability);
     let s = changingProduct[index].durability;
     let y = parseInt(s.split("/")[0].trim());
     if (y <= durabilityDecrease) {
@@ -102,17 +108,25 @@ export default function BasicModal({ productData, setProductData }) {
     }
     changingProduct[index].durability = `${y} / ${s.split("/")[1].trim()}`;
     setProductData(changingProduct);
+    const bookingProduct = currentProduct;
+    if (bookingProduct.mileage !== "N/A") {
+      bookingProduct.usedMileage = totalMileage;
+    }
+    bookingProduct.cost = price;
+
+    setBookProducts([...bookProducts, bookingProduct]);
   };
 
   useEffect(() => {
-    setProducts(
-      data.map((row) => {
-        return {
-          row,
-        };
-      })
-    );
-  }, []);
+    // setProducts(
+    //   data.map((row) => {
+    //     return {
+    //       row,
+    //     };
+    //   })
+    // );
+    setProducts(productData);
+  }, [productData]);
 
   return (
     <div>

@@ -8,6 +8,7 @@ import "./App.css";
 
 function App() {
   const [productData, setProductData] = useState([]);
+  const [bookedProducts, setBookedProducts] = useState([]);
   useEffect(() => {
     setProductData(
       data.map((row, index) => {
@@ -16,21 +17,37 @@ function App() {
           index: index,
           name: row.name,
           code: row.code,
+          type: row.type,
+          max_durability: row.max_durability,
+          price: row.price,
           availability: row.availability,
           needingRepair: row.needing_repair,
           durability: `${row.durability} / ${row.max_durability}`,
           mileage: row.mileage ? row.mileage : "N/A",
-          test: "hello",
+          minimum_rent_period: row.minimum_rent_period,
         };
       })
     );
   }, []);
+  useEffect(() => {
+    console.log(bookedProducts);
+  }, [bookedProducts]);
   return (
     <div>
       <Table data={productData} />
       <Stack spacing={2} direction="row">
-        <BookModal productData={productData} setProductData={setProductData} />
-        <ReturnModal />
+        <BookModal
+          productData={productData}
+          setProductData={setProductData}
+          bookProducts={bookedProducts}
+          setBookProducts={setBookedProducts}
+        />
+        <ReturnModal
+          productData={productData}
+          setProductData={setProductData}
+          bookProducts={bookedProducts}
+          setBookProducts={setBookedProducts}
+        />
       </Stack>
     </div>
   );

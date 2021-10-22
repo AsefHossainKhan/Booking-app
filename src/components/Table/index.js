@@ -74,7 +74,6 @@ const Table = ({ data }) => {
   useEffect(() => {
     setRows(data);
     setOriginalRows(data);
-    console.log("data changed");
   }, [data]);
   // useEffect(() => {
   //   setOriginalRows(

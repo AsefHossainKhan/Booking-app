@@ -9,7 +9,6 @@ import { Grid, Typography } from "@material-ui/core/";
 import FormButton from "../Button";
 import DateTimePicker from "../DateTimePicker";
 import Select from "../Select";
-import data from "../../data/Data.json";
 
 const style = {
   position: "absolute",
@@ -33,19 +32,18 @@ const useStyles = makeStyles((theme) => ({
 
 const initialFormState = {
   products: "",
-  from: "",
-  to: "",
 };
 
 const formValidation = Yup.object().shape({
   products: Yup.object().required("Required"),
-  from: Yup.date().required("Required"),
-  to: Yup.date()
-    .required("Required")
-    .when("from", (from, schema) => from && schema.min(from)),
 });
 
-export default function BasicModal() {
+export default function BasicModal({
+  productData,
+  setProductData,
+  bookProducts,
+  setBookProducts,
+}) {
   const [products, setProducts] = useState({});
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -55,24 +53,41 @@ export default function BasicModal() {
   const handleChildOpen = () => setChildOpen(true);
   const handleChildClose = () => setChildOpen(false);
 
+  const [currentProduct, setCurrentProduct] = useState(null);
+  const [rentDuration, setRentDuration] = useState(0);
+  // const [price, setPrice] = useState(0);
+
+  useEffect(() => {
+    setProducts(bookProducts);
+  }, [bookProducts]);
+
   const handleSubmit = (values) => {
-    console.log(values);
     handleChildOpen();
   };
 
-  useEffect(() => {
-    setProducts(
-      data.map((row) => {
-        return {
-          row,
-        };
-      })
+  const handleChildSubmit = () => {
+    handleChildClose();
+    handleClose();
+
+    const index = productData.findIndex(
+      (product) => product.code === currentProduct.code
     );
-  }, []);
+    let changingProduct = productData;
+    changingProduct[index].availability = true;
+    setProductData(changingProduct);
+    changingProduct = bookProducts.filter(
+      (product) => product.code !== currentProduct.code
+    );
+    setBookProducts(changingProduct);
+  };
 
   return (
     <div>
-      <Button variant="contained" onClick={handleOpen}>
+      <Button
+        variant="contained"
+        onClick={handleOpen}
+        disabled={bookProducts.length === 0}
+      >
         RETURN
       </Button>
       <Modal
@@ -83,26 +98,30 @@ export default function BasicModal() {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Book a product
+            Return a product
           </Typography>
           <Formik
             initialValues={{ ...initialFormState }}
             validationSchema={formValidation}
             onSubmit={handleSubmit}
+            // enableReinitialize
           >
             <Form>
               <Grid item xs={12}>
                 <Select
                   name="products"
                   label="Product"
-                  options={products}
+                  options={bookProducts}
+                  returns={true}
+                  setCurrentProduct={setCurrentProduct}
                 ></Select>
               </Grid>
-              <Grid item xs={6}>
-                <DateTimePicker name="from" label="From" />
-              </Grid>
-              <Grid item xs={6}>
-                <DateTimePicker name="to" label="To" />
+              <Grid item xs={12}>
+                {currentProduct && currentProduct.usedMileage ? (
+                  <span>Used Mileage: {currentProduct.usedMileage}</span>
+                ) : (
+                  ""
+                )}
               </Grid>
               <Grid item xs={12}>
                 <Button onClick={handleClose}>No</Button>
@@ -122,17 +141,17 @@ export default function BasicModal() {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Book a product
+            Return a product
           </Typography>
           <Grid container>
             <Grid item xs={12}>
-              {"It is going to cost you nothing"}
+              {currentProduct && `Your total price is $${currentProduct.cost}`}
             </Grid>
             <Grid item xs={6}>
               <Button onClick={handleChildClose}>No</Button>
             </Grid>
             <Grid item xs={6}>
-              <Button>Yes</Button>
+              <Button onClick={handleChildSubmit}>Yes</Button>
             </Grid>
           </Grid>
         </Box>
