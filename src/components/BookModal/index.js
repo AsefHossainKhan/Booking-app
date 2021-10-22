@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import { makeStyles } from "@material-ui/core/styles";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Grid, Typography } from "@material-ui/core/";
 import FormButton from "../Button";
 import DateTimePicker from "../DateTimePicker";
 import Select from "../Select";
+import "./bookModal.css";
 
 const style = {
   position: "absolute",
@@ -21,14 +21,6 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-
-const useStyles = makeStyles((theme) => ({
-  //changed this???
-  formWrapper: {
-    marginTop: theme.spacing(5),
-    marginBottom: theme.spacing(8),
-  },
-}));
 
 const initialFormState = {
   products: "",
@@ -69,7 +61,9 @@ export default function BasicModal({
       (Date.parse(values.to) - Date.parse(values.from)) / 86400000
     );
     setRentDuration(rentPeriod);
-    if (rentPeriod < values.products.minimum_rent_period) {
+    if (Date.now() > Date.parse(values.from)) {
+      alert("From date cannot be in the past");
+    } else if (rentPeriod < values.products.minimum_rent_period) {
       alert(
         `minimum rent period must be ${values.products.minimum_rent_period} days`
       );
@@ -122,13 +116,6 @@ export default function BasicModal({
   };
 
   useEffect(() => {
-    // setProducts(
-    //   data.map((row) => {
-    //     return {
-    //       row,
-    //     };
-    //   })
-    // );
     setProducts(productData);
   }, [productData]);
 
@@ -144,7 +131,12 @@ export default function BasicModal({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+            className="title"
+          >
             Book a product
           </Typography>
           <Formik
@@ -153,24 +145,32 @@ export default function BasicModal({
             onSubmit={handleSubmit}
           >
             <Form>
-              <Grid item xs={12}>
-                <Select
-                  name="products"
-                  label="Product"
-                  options={products}
-                ></Select>
-              </Grid>
-              <Grid item xs={6}>
-                <DateTimePicker name="from" label="From" />
-              </Grid>
-              <Grid item xs={6}>
-                <DateTimePicker name="to" label="To" />
-              </Grid>
-              <Grid item xs={12}>
-                <Button onClick={handleClose}>No</Button>
-              </Grid>
-              <Grid item xs={12}>
-                <FormButton>Yes</FormButton>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Select
+                    name="products"
+                    label="Product"
+                    options={products}
+                  ></Select>
+                </Grid>
+                <Grid item xs={6}>
+                  <DateTimePicker name="from" label="From" />
+                </Grid>
+                <Grid item xs={6}>
+                  <DateTimePicker name="to" label="To" />
+                </Grid>
+                <Grid item xs={6}>
+                  <Button
+                    variant="outlined"
+                    fullWidth="true"
+                    onClick={handleClose}
+                  >
+                    No
+                  </Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormButton variant="outlined">Yes</FormButton>
+                </Grid>
               </Grid>
             </Form>
           </Formik>
@@ -183,18 +183,39 @@ export default function BasicModal({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+            className="title"
+          >
             Book a product
           </Typography>
-          <Grid container>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
-              {`Your estimated price is ${price} \n Do you want to procede?`}
+              <span>
+                {`Your estimated price is ${price}`}
+                <br />
+                {`Do you want to procede?`}
+              </span>
             </Grid>
             <Grid item xs={6}>
-              <Button onClick={handleChildClose}>No</Button>
+              <Button
+                variant="outlined"
+                fullWidth="true"
+                onClick={handleChildClose}
+              >
+                No
+              </Button>
             </Grid>
             <Grid item xs={6}>
-              <Button onClick={handleChildSubmit}>Yes</Button>
+              <Button
+                variant="outlined"
+                fullWidth="true"
+                onClick={handleChildSubmit}
+              >
+                Yes
+              </Button>
             </Grid>
           </Grid>
         </Box>

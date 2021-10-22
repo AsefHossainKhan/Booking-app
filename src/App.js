@@ -4,6 +4,7 @@ import Stack from "@mui/material/Stack";
 import BookModal from "./Components/BookModal";
 import ReturnModal from "./Components/ReturnModal";
 import data from "./data/Data.json";
+import { Container } from "@material-ui/core/";
 import "./App.css";
 
 function App() {
@@ -17,7 +18,7 @@ function App() {
       const myData = data.map((row, index) => {
         return {
           id: row.code,
-          index: index,
+          index: index + 1,
           name: row.name,
           code: row.code,
           type: row.type,
@@ -39,13 +40,11 @@ function App() {
       setBookedProducts(JSON.parse(checkBookedData));
     }
   }, []);
-  // useEffect(() => {
-  //   console.log(bookedProducts);
-  // }, [bookedProducts]);
+
   return (
-    <div>
+    <Container className="container">
       <Table data={productData} />
-      <Stack spacing={2} direction="row">
+      <Stack className="stack" spacing={2} direction="row">
         <BookModal
           productData={productData}
           setProductData={setProductData}
@@ -59,7 +58,7 @@ function App() {
           setBookProducts={setBookedProducts}
         />
       </Stack>
-    </div>
+    </Container>
   );
 }
 

@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import { makeStyles } from "@material-ui/core/styles";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Grid, Typography } from "@material-ui/core/";
 import FormButton from "../Button";
-import DateTimePicker from "../DateTimePicker";
 import Select from "../Select";
+import "./returnModal.css";
 
 const style = {
   position: "absolute",
@@ -21,14 +20,6 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-
-const useStyles = makeStyles((theme) => ({
-  //changed this???
-  formWrapper: {
-    marginTop: theme.spacing(5),
-    marginBottom: theme.spacing(8),
-  },
-}));
 
 const initialFormState = {
   products: "",
@@ -44,8 +35,8 @@ export default function BasicModal({
   bookProducts,
   setBookProducts,
 }) {
-  const [products, setProducts] = useState({});
-  const [open, setOpen] = useState(false);
+  // const [products, setProducts] = useState({});
+  const [open, setOpen] = useState(true);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -54,12 +45,11 @@ export default function BasicModal({
   const handleChildClose = () => setChildOpen(false);
 
   const [currentProduct, setCurrentProduct] = useState(null);
-  const [rentDuration, setRentDuration] = useState(0);
   // const [price, setPrice] = useState(0);
 
-  useEffect(() => {
-    setProducts(bookProducts);
-  }, [bookProducts]);
+  // useEffect(() => {
+  //   setProducts(bookProducts);
+  // }, [bookProducts]);
 
   const handleSubmit = (values) => {
     handleChildOpen();
@@ -98,37 +88,49 @@ export default function BasicModal({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+            className="title"
+          >
             Return a product
           </Typography>
           <Formik
             initialValues={{ ...initialFormState }}
             validationSchema={formValidation}
             onSubmit={handleSubmit}
-            // enableReinitialize
           >
             <Form>
-              <Grid item xs={12}>
-                <Select
-                  name="products"
-                  label="Product"
-                  options={bookProducts}
-                  returns={true}
-                  setCurrentProduct={setCurrentProduct}
-                ></Select>
-              </Grid>
-              <Grid item xs={12}>
-                {currentProduct && currentProduct.usedMileage ? (
-                  <span>Used Mileage: {currentProduct.usedMileage}</span>
-                ) : (
-                  ""
-                )}
-              </Grid>
-              <Grid item xs={12}>
-                <Button onClick={handleClose}>No</Button>
-              </Grid>
-              <Grid item xs={12}>
-                <FormButton>Yes</FormButton>
+              <Grid spacing={2} container>
+                <Grid item xs={12}>
+                  <Select
+                    name="products"
+                    label="Product"
+                    options={bookProducts}
+                    returns={true}
+                    setCurrentProduct={setCurrentProduct}
+                  ></Select>
+                </Grid>
+                <Grid item xs={12}>
+                  {currentProduct && currentProduct.usedMileage ? (
+                    <span>Used Mileage: {currentProduct.usedMileage}</span>
+                  ) : (
+                    ""
+                  )}
+                </Grid>
+                <Grid item xs={6}>
+                  <Button
+                    variant="outlined"
+                    fullWidth="true"
+                    onClick={handleClose}
+                  >
+                    No
+                  </Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormButton>Yes</FormButton>
+                </Grid>
               </Grid>
             </Form>
           </Formik>
@@ -141,18 +143,35 @@ export default function BasicModal({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+            className="title"
+          >
             Return a product
           </Typography>
-          <Grid container>
+          <Grid spacing={2} container>
             <Grid item xs={12}>
               {currentProduct && `Your total price is $${currentProduct.cost}`}
             </Grid>
             <Grid item xs={6}>
-              <Button onClick={handleChildClose}>No</Button>
+              <Button
+                variant="outlined"
+                fullWidth="true"
+                onClick={handleChildClose}
+              >
+                No
+              </Button>
             </Grid>
             <Grid item xs={6}>
-              <Button onClick={handleChildSubmit}>Yes</Button>
+              <Button
+                variant="outlined"
+                fullWidth="true"
+                onClick={handleChildSubmit}
+              >
+                Yes
+              </Button>
             </Grid>
           </Grid>
         </Box>
