@@ -10,6 +10,8 @@ import DateTimePicker from "../DateTimePicker";
 import Select from "../Select";
 import "./bookModal.css";
 
+//Style of the modal
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -22,11 +24,15 @@ const style = {
   p: 4,
 };
 
+//Intiial state of the form
+
 const initialFormState = {
   products: "",
   from: "",
   to: "",
 };
+
+//Forms validation logic
 
 const formValidation = Yup.object().shape({
   products: Yup.object().required("Required"),
@@ -49,7 +55,9 @@ export default function BasicModal({
 
   const [childOpen, setChildOpen] = useState(false);
   const handleChildOpen = () => setChildOpen(true);
-  const handleChildClose = () => setChildOpen(false);
+  const handleChildClose = () => {
+    setChildOpen(false);
+  };
 
   const [currentProduct, setCurrentProduct] = useState(null);
   const [rentDuration, setRentDuration] = useState(0);
@@ -61,7 +69,7 @@ export default function BasicModal({
       (Date.parse(values.to) - Date.parse(values.from)) / 86400000
     );
     setRentDuration(rentPeriod);
-    if (Date.now() > Date.parse(values.from)) {
+    if (Date.now() >= Date.parse(values.from)) {
       alert("From date cannot be in the past");
     } else if (rentPeriod < values.products.minimum_rent_period) {
       alert(
@@ -113,6 +121,9 @@ export default function BasicModal({
 
     const updatedBookedProducts = [...bookProducts, bookingProduct];
     localStorage.setItem("bookedData", JSON.stringify(updatedBookedProducts));
+
+    //Without refreshing, the table will not be updated, however just clicking on any table cell will update it. So its a user preference
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -162,7 +173,7 @@ export default function BasicModal({
                 <Grid item xs={6}>
                   <Button
                     variant="outlined"
-                    fullWidth="true"
+                    fullWidth={true}
                     onClick={handleClose}
                   >
                     No
@@ -194,7 +205,7 @@ export default function BasicModal({
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <span>
-                {`Your estimated price is ${price}`}
+                {`Your estimated price is $${price}`}
                 <br />
                 {`Do you want to procede?`}
               </span>
@@ -202,7 +213,7 @@ export default function BasicModal({
             <Grid item xs={6}>
               <Button
                 variant="outlined"
-                fullWidth="true"
+                fullWidth={true}
                 onClick={handleChildClose}
               >
                 No
@@ -211,7 +222,7 @@ export default function BasicModal({
             <Grid item xs={6}>
               <Button
                 variant="outlined"
-                fullWidth="true"
+                fullWidth={true}
                 onClick={handleChildSubmit}
               >
                 Yes

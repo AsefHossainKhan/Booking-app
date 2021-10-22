@@ -9,6 +9,8 @@ import FormButton from "../Button";
 import Select from "../Select";
 import "./returnModal.css";
 
+//style of the modal
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -21,9 +23,13 @@ const style = {
   p: 4,
 };
 
+//initial state
+
 const initialFormState = {
   products: "",
 };
+
+//validation logic
 
 const formValidation = Yup.object().shape({
   products: Yup.object().required("Required"),
@@ -35,8 +41,7 @@ export default function BasicModal({
   bookProducts,
   setBookProducts,
 }) {
-  // const [products, setProducts] = useState({});
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -45,12 +50,6 @@ export default function BasicModal({
   const handleChildClose = () => setChildOpen(false);
 
   const [currentProduct, setCurrentProduct] = useState(null);
-  // const [price, setPrice] = useState(0);
-
-  // useEffect(() => {
-  //   setProducts(bookProducts);
-  // }, [bookProducts]);
-
   const handleSubmit = (values) => {
     handleChildOpen();
   };
@@ -65,11 +64,14 @@ export default function BasicModal({
     let changingProduct = productData;
     changingProduct[index].availability = true;
     setProductData(changingProduct);
+    localStorage.setItem("productData", JSON.stringify(changingProduct));
     changingProduct = bookProducts.filter(
       (product) => product.code !== currentProduct.code
     );
     setBookProducts(changingProduct);
     localStorage.setItem("bookedData", JSON.stringify(changingProduct));
+    //Without refreshing, the table will not be updated, however just clicking on any table cell will update it. So its a user preference
+    window.location.reload();
   };
 
   return (
@@ -78,6 +80,7 @@ export default function BasicModal({
         variant="contained"
         onClick={handleOpen}
         disabled={bookProducts.length === 0}
+        color="secondary"
       >
         RETURN
       </Button>
@@ -122,14 +125,14 @@ export default function BasicModal({
                 <Grid item xs={6}>
                   <Button
                     variant="outlined"
-                    fullWidth="true"
+                    fullWidth={true}
                     onClick={handleClose}
                   >
                     No
                   </Button>
                 </Grid>
                 <Grid item xs={6}>
-                  <FormButton>Yes</FormButton>
+                  <FormButton variant="outlined">Yes</FormButton>
                 </Grid>
               </Grid>
             </Form>
@@ -158,7 +161,7 @@ export default function BasicModal({
             <Grid item xs={6}>
               <Button
                 variant="outlined"
-                fullWidth="true"
+                fullWidth={true}
                 onClick={handleChildClose}
               >
                 No
@@ -167,7 +170,7 @@ export default function BasicModal({
             <Grid item xs={6}>
               <Button
                 variant="outlined"
-                fullWidth="true"
+                fullWidth={true}
                 onClick={handleChildSubmit}
               >
                 Yes

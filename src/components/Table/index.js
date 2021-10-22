@@ -4,6 +4,7 @@ import SearchBar from "material-ui-search-bar";
 import "./table.css";
 
 const Table = ({ data }) => {
+  //columns are hardcoded while rows are dynamically generated
   const [columns] = useState([
     { field: "index", headerName: "Index", width: 120 },
     { field: "name", headerName: "Name", width: 200 },
@@ -62,6 +63,7 @@ const Table = ({ data }) => {
         onChange={(searchVal) => requestSearch(searchVal)}
         onCancelSearch={() => cancelSearch()}
       />
+
       <DataGrid
         rows={rows}
         columns={columns}

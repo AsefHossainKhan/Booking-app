@@ -8,9 +8,11 @@ import { Container } from "@material-ui/core/";
 import "./App.css";
 
 function App() {
+  //State for products Data which is being passed around
   const [productData, setProductData] = useState([]);
   const [bookedProducts, setBookedProducts] = useState([]);
   useEffect(() => {
+    //Local storage check on app initialization
     const checkProductData = localStorage.getItem("productData");
     if (checkProductData) {
       setProductData(JSON.parse(checkProductData));
@@ -41,6 +43,7 @@ function App() {
     }
   }, []);
 
+  //here the product and bookedProducts data was sent via props, however it could also have been sent by Context API to make the code a bit more cleaner.
   return (
     <Container className="container">
       <Table data={productData} />
