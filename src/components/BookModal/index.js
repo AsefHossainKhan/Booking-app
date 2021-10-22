@@ -87,6 +87,7 @@ export default function BasicModal({ productData, setProductData }) {
       (product) => product.code === currentProduct.code
     );
     let changingProduct = productData;
+    changingProduct[index].availability = false;
     if (changingProduct[index].mileage !== "N/A") {
       changingProduct[index].mileage += totalMileage;
     }
@@ -95,7 +96,7 @@ export default function BasicModal({ productData, setProductData }) {
     let y = parseInt(s.split("/")[0].trim());
     if (y <= durabilityDecrease) {
       y = 0;
-      changingProduct[index].availability = false;
+      changingProduct[index].needing_repair = true;
     } else if (y > durabilityDecrease) {
       y -= durabilityDecrease;
     }
