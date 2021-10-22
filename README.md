@@ -1,3 +1,9 @@
+# Some info about the application
+
+The project supports booking and returning of various products, whose information is updated on the table. The table supports sorting, and searching (based on the product names). You can run the project after cloning using yarn in the console.
+
+Below are the default yarn generated README code
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
