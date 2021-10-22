@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
+import data from "../../data/Data.json";
 
-const columns = [
+const mycolumn = [
   { field: "id", headerName: "ID", width: 70 },
   { field: "firstName", headerName: "First name", width: 130 },
   { field: "lastName", headerName: "Last name", width: 130 },
@@ -24,7 +25,7 @@ const columns = [
   },
 ];
 
-const rows = [
+const myRows = [
   { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
   { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
   { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
@@ -37,6 +38,54 @@ const rows = [
 ];
 
 const Table = () => {
+  const [columns, setColumns] = useState([
+    { field: "index", headerName: "Index", width: 120 },
+    { field: "name", headerName: "Name", width: 130 },
+    {
+      field: "code",
+      headerName: "Code",
+      width: 90,
+    },
+    {
+      field: "availability",
+      headerName: "Availability",
+      width: 90,
+    },
+    {
+      field: "needingRepair",
+      headerName: "Need To Repair",
+      width: 90,
+    },
+    {
+      field: "durability",
+      headerName: "Durability",
+      width: 90,
+    },
+    {
+      field: "mileage",
+      headerName: "Mileage",
+      width: 90,
+    },
+  ]);
+
+  const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+    setRows(
+      data.map((row, index) => {
+        return {
+          id: row.code,
+          index: index,
+          name: row.name,
+          code: row.code,
+          availability: row.availability,
+          needingRepair: row.needing_repair,
+          durability: row.durability,
+          millis: row.mileage,
+        };
+      })
+    );
+  }, []);
   return (
     <div style={{ height: 400, width: "100%" }}>
       <DataGrid
