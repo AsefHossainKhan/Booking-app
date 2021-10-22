@@ -38,69 +38,74 @@ import SearchBar from "material-ui-search-bar";
 //   { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
 // ];
 
-const Table = () => {
+const Table = ({ data }) => {
   const [columns] = useState([
     { field: "index", headerName: "Index", width: 120 },
-    { field: "name", headerName: "Name", width: 130 },
+    { field: "name", headerName: "Name", width: 200 },
     {
       field: "code",
       headerName: "Code",
-      width: 90,
+      width: 120,
     },
     {
       field: "availability",
       headerName: "Availability",
-      width: 90,
+      width: 150,
     },
     {
       field: "needingRepair",
       headerName: "Need To Repair",
-      width: 90,
+      width: 200,
     },
     {
       field: "durability",
       headerName: "Durability",
-      width: 90,
+      width: 140,
     },
     {
       field: "mileage",
       headerName: "Mileage",
-      width: 90,
+      width: 140,
     },
   ]);
 
   const [rows, setRows] = useState([]);
   const [originalRows, setOriginalRows] = useState([]);
   useEffect(() => {
-    setOriginalRows(
-      data.map((row, index) => {
-        return {
-          id: row.code,
-          index: index,
-          name: row.name,
-          code: row.code,
-          availability: row.availability,
-          needingRepair: row.needing_repair,
-          durability: row.durability,
-          millis: row.mileage,
-        };
-      })
-    );
-    setRows(
-      data.map((row, index) => {
-        return {
-          id: row.code,
-          index: index,
-          name: row.name,
-          code: row.code,
-          availability: row.availability,
-          needingRepair: row.needing_repair,
-          durability: row.durability,
-          millis: row.mileage,
-        };
-      })
-    );
-  }, []);
+    setRows(data);
+    setOriginalRows(data);
+    console.log("data changed");
+  }, [data]);
+  // useEffect(() => {
+  //   setOriginalRows(
+  //     data.map((row, index) => {
+  //       return {
+  //         id: row.code,
+  //         index: index,
+  //         name: row.name,
+  //         code: row.code,
+  //         availability: row.availability,
+  //         needingRepair: row.needing_repair,
+  //         durability: `${row.durability} / ${row.max_durability}`,
+  //         mileage: row.mileage ? row.mileage : "N/A",
+  //       };
+  //     })
+  //   );
+  //   setRows(
+  //     data.map((row, index) => {
+  //       return {
+  //         id: row.code,
+  //         index: index,
+  //         name: row.name,
+  //         code: row.code,
+  //         availability: row.availability,
+  //         needingRepair: row.needing_repair,
+  //         durability: `${row.durability} / ${row.max_durability}`,
+  //         mileage: row.mileage ? row.mileage : "N/A",
+  //       };
+  //     })
+  //   );
+  // }, []);
 
   const [searched, setSearched] = useState("");
   const requestSearch = (searchedVal) => {
@@ -127,6 +132,7 @@ const Table = () => {
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}
+        disableSelectionOnClick
       />
     </div>
   );

@@ -45,19 +45,62 @@ const formValidation = Yup.object().shape({
     .when("from", (from, schema) => from && schema.min(from)),
 });
 
-export default function BasicModal() {
+export default function BasicModal({ productData, setProductData }) {
   const [products, setProducts] = useState({});
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const [childOpen, setChildOpen] = useState(true);
+  const [childOpen, setChildOpen] = useState(false);
   const handleChildOpen = () => setChildOpen(true);
   const handleChildClose = () => setChildOpen(false);
 
+  const [currentProduct, setCurrentProduct] = useState(null);
+  const [rentDuration, setRentDuration] = useState(0);
+  const [price, setPrice] = useState(0);
+
   const handleSubmit = (values) => {
-    console.log(values);
-    handleChildOpen();
+    // console.log(values);
+    setCurrentProduct(values.products);
+    const rentPeriod = Math.floor(
+      (Date.parse(values.to) - Date.parse(values.from)) / 86400000
+    );
+    setRentDuration(rentPeriod);
+    if (rentPeriod < values.products.minimum_rent_period) {
+      alert(
+        `minimum rent period must be ${values.products.minimum_rent_period} days`
+      );
+    } else {
+      setPrice(rentPeriod * values.products.price);
+      handleChildOpen();
+    }
+  };
+
+  const handleChildSubmit = () => {
+    handleChildClose();
+    handleClose();
+    const totalMileage = rentDuration * 10;
+    const durabilityDecrease =
+      rentDuration * 2 + Math.floor(rentDuration / 10) * 2;
+
+    const index = productData.findIndex(
+      (product) => product.code === currentProduct.code
+    );
+    let changingProduct = productData;
+    if (changingProduct[index].mileage !== "N/A") {
+      changingProduct[index].mileage += totalMileage;
+    }
+    console.log(changingProduct[index].durability);
+    let s = changingProduct[index].durability;
+    let y = parseInt(s.split("/")[0].trim());
+    if (y <= durabilityDecrease) {
+      y = 0;
+      changingProduct[index].availability = false;
+    } else if (y > durabilityDecrease) {
+      y -= durabilityDecrease;
+    }
+    changingProduct[index].durability = `${y} / ${s.split("/")[1].trim()}`;
+    setProductData(changingProduct);
   };
 
   useEffect(() => {
@@ -126,14 +169,13 @@ export default function BasicModal() {
           </Typography>
           <Grid container>
             <Grid item xs={12}>
-              {"It is going to cost you nothing"}
+              {`Your estimated price is ${price} \n Do you want to procede?`}
             </Grid>
-
             <Grid item xs={6}>
               <Button onClick={handleChildClose}>No</Button>
             </Grid>
             <Grid item xs={6}>
-              <Button>Yes</Button>
+              <Button onClick={handleChildSubmit}>Yes</Button>
             </Grid>
           </Grid>
         </Box>

@@ -26,11 +26,11 @@ const SelectWrapper = ({ name, options, ...otherProps }) => {
   return (
     <TextField {...configSelect}>
       {options.map((item, pos) => {
-        return (
+        return item.row.availability ? (
           <MenuItem key={pos} value={item.row}>
             {`${item.row.name} / ${item.row.code}`}
           </MenuItem>
-        );
+        ) : null;
       })}
     </TextField>
   );
