@@ -108,6 +108,7 @@ export default function BasicModal({
     }
     changingProduct[index].durability = `${y} / ${s.split("/")[1].trim()}`;
     setProductData(changingProduct);
+    localStorage.setItem("productData", JSON.stringify(changingProduct));
     const bookingProduct = currentProduct;
     if (bookingProduct.mileage !== "N/A") {
       bookingProduct.usedMileage = totalMileage;
@@ -115,6 +116,9 @@ export default function BasicModal({
     bookingProduct.cost = price;
 
     setBookProducts([...bookProducts, bookingProduct]);
+
+    const updatedBookedProducts = [...bookProducts, bookingProduct];
+    localStorage.setItem("bookedData", JSON.stringify(updatedBookedProducts));
   };
 
   useEffect(() => {

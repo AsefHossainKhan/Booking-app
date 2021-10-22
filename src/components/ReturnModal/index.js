@@ -79,6 +79,7 @@ export default function BasicModal({
       (product) => product.code !== currentProduct.code
     );
     setBookProducts(changingProduct);
+    localStorage.setItem("bookedData", JSON.stringify(changingProduct));
   };
 
   return (

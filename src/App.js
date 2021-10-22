@@ -10,8 +10,11 @@ function App() {
   const [productData, setProductData] = useState([]);
   const [bookedProducts, setBookedProducts] = useState([]);
   useEffect(() => {
-    setProductData(
-      data.map((row, index) => {
+    const checkProductData = localStorage.getItem("productData");
+    if (checkProductData) {
+      setProductData(JSON.parse(checkProductData));
+    } else {
+      const myData = data.map((row, index) => {
         return {
           id: row.code,
           index: index,
@@ -26,12 +29,19 @@ function App() {
           mileage: row.mileage ? row.mileage : "N/A",
           minimum_rent_period: row.minimum_rent_period,
         };
-      })
-    );
+      });
+      setProductData(myData);
+      localStorage.setItem("productData", JSON.stringify(myData));
+    }
+
+    const checkBookedData = localStorage.getItem("bookedData");
+    if (checkBookedData) {
+      setBookedProducts(JSON.parse(checkBookedData));
+    }
   }, []);
-  useEffect(() => {
-    console.log(bookedProducts);
-  }, [bookedProducts]);
+  // useEffect(() => {
+  //   console.log(bookedProducts);
+  // }, [bookedProducts]);
   return (
     <div>
       <Table data={productData} />
