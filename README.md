@@ -1,5 +1,7 @@
 # Some info about the application
 
+If any error arises that the component folder cannot be found, please rename it to Components instead of component
+
 The project supports booking and returning of various products, whose information is updated on the table. The table supports sorting, and searching (based on the product names). You can run the project after cloning using yarn in the console.
 
 It is also being hosted on www.asefhossain.ga with aws linux server for viewing purposes. It will probably be taken down by the end of the month.
