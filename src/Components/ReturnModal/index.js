@@ -21,6 +21,10 @@ const style = {
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+  "@media (max-width: 500px)": {
+    width: 240,
+    p: 2,
+  },
 };
 
 //initial state

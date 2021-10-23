@@ -56,7 +56,7 @@ const Table = ({ data }) => {
   };
 
   return (
-    <div style={{ height: 647, width: "100%" }}>
+    <div style={{ height: 448, width: "100%" }}>
       <SearchBar
         className="search-bar"
         value={searched}
@@ -67,8 +67,8 @@ const Table = ({ data }) => {
       <DataGrid
         rows={rows}
         columns={columns}
-        pageSize={10}
-        rowsPerPageOptions={[10]}
+        pageSize={6}
+        rowsPerPageOptions={[6]}
         disableSelectionOnClick
       />
     </div>
